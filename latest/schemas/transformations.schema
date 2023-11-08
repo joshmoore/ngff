@@ -1,0 +1,280 @@
+{
+    "$id": "https://ngff.openmicroscopy.org/latest/schemas/transformations.schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "coordinateSystems": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "axes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "axes",
+                    "name"
+                ]
+            }
+        },
+        "coordinateTransformations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "affine": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "input": {
+                        "type": "string"
+                    },
+                    "output": {
+                        "type": "string"
+                    },
+                    "forward": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "path": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "path",
+                            "type"
+                        ]
+                    },
+                    "inverse": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "path": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "path",
+                            "type"
+                        ]
+                    },
+                    "transformations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "translation": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                },
+                                "input": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "output": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "scale": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                },
+                                "path": {
+                                    "type": "string"
+                                },
+                                "inputAxes": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "outputAxes": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ]
+                        }
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "interpolation": {
+                        "type": "string"
+                    },
+                    "transformation": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "path": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "path",
+                            "type"
+                        ]
+                    },
+                    "mapAxis": {
+                        "type": "object",
+                        "properties": {
+                            "x": {
+                                "type": "string"
+                            },
+                            "y": {
+                                "type": "string"
+                            },
+                            "z": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "x"
+                        ]
+                    },
+                    "mapIndex": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "rotation": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "scale": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "translation": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "required": [
+                    "input",
+                    "output",
+                    "type"
+                ]
+            }
+        },
+        "type": {
+            "type": "string"
+        },
+        "forward": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "input": {
+                    "type": "string"
+                },
+                "output": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "input",
+                "output",
+                "path",
+                "type"
+            ]
+        },
+        "inverse": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "input": {
+                    "type": "string"
+                },
+                "output": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "input",
+                "output",
+                "path",
+                "type"
+            ]
+        },
+        "input": {
+            "type": "string"
+        },
+        "output": {
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "$id": "https://ngff.openmicroscopy.org/latest/schemas/coordSystems.schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "arrayCoordinateSystem": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "axes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "type"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "axes",
+                "name"
+            ]
+        }
+    },
+    "required": [
+        "arrayCoordinateSystem"
+    ]
+}
