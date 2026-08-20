@@ -7,6 +7,7 @@ comments/index
 versions/index
 ```
 
+<!-- REV0: proposed description -->
 Extending OME-Zarr with new metadata types, references, and collections
 
 ## Status
@@ -42,6 +43,8 @@ opening the document will form a clear understanding of the RFCs intent from
 reading this paragraph(s).
 
 -->
+
+<!-- REV0: intro and background generated with an attempt at an unbiased description -->
 
 This proposal introduces a general extensibility mechanism for OME-Zarr
 metadata. It defines a common Node interface, a system for referencing nodes
@@ -270,6 +273,8 @@ nodes to multiple collections. Arbitrary user or implementation metadata may be
 added to collections or nodes, which is an opportunity to add metadata that is
 only valid for a node in the context of a collection (e.g. rendering settings).
 
+<!-- REV0: Nodes has a meaning a zarr and having an OME-Zarr node be anything other than a Zarr node with OME metadata could be confusing. I don't think we want to open up the naming discussion completely, but some general guidelines for understandability might be worth discussing. -->
+
 <a id="abstract-structure-node"></a>
 #### `Node`
 
@@ -442,6 +447,7 @@ This new interface replaces the dataset metadata defined in the previous version
 A `Multiscale` node represents an OME-Zarr multiscale image.
 This new interface replaces the multiscale metadata defined in the previous versions of the OME-Zarr specification.
 
+<!-- REV0: modified classes could benefit from an additional column to describe field-level changes from 0.6 -->
 <a id="multiscale-node-schema"></a>
 ##### Schema
 
@@ -684,6 +690,8 @@ The previous `label-value` key is now renamed to `labelValue` for consistency.
     }
 }
 ```
+<!-- REV0: Understanding the choices here would be useful. could labelValue be
+a dictionary? would [{type=label-something}] work? -->
 
 #### High-content screening (HCS) metadata
 
@@ -744,6 +752,8 @@ We suggest two possible layouts for HCS data, which are not mutually exclusive a
 In this layout, all multiscale nodes are direct children of the well collection.
 Each node carries an `acquisition` attribute.
 Derived images such as label maps are siblings of their source image and can still be linked via the `source` reference in their `labels` attribute. This layout is more compact but can become cluttered when there are multiple acquisitions and derived nodes.
+
+<!-- REV0: use of the .img ending is unclear -->
 
 ```jsonc
 {
@@ -834,6 +844,8 @@ Derived images such as label maps are siblings of their source image and can sti
 In this layout, each acquisition is wrapped in a sub-collection inside the well.
 The `acquisition` attribute is set on the sub-collection rather than on individual nodes.
 This serves as an example that wells can consist of collections, not just multiscales. 
+
+<!-- REV0: This is an interesting new concept that I can see the utility of. If we were to follow the coordSys model then perhaps this should be a graph not a collection. A maximal example of all the dimensions of the "inner well images" might be useful to piece out what metadata is needed at that level to understand what's actually going on. -->
 
 ```jsonc
 {
@@ -1016,6 +1028,8 @@ That is left to be defined on a case-by-case basis for individual key specificat
 
 
 
+
+<!-- REV0: consider listing endorsements (if only by the authors) of the stories -->
 
 ## User stories
 
@@ -1519,11 +1533,16 @@ issues or unknown unknowns prior to writing any real code.
 
 
 ## Drawbacks, risks, alternatives, and unknowns
+
+<!-- REV0: Either here or under "Abandoned ideas" it would be good to understand the design decisions of the extension & collection structures themselves. Currently under "Abandoned ideas" you describe why RO-Crate & JSON-LD were not sufficient leading you to define a new type system, but not why the choices in this type system were made. Additionally, was Zarr's extension system considered? -->
+
 This RFC adds breaking changes that are neither backwards nor forwards compatible, which presents additional complexity to implementations and users.
 
 Defining a custom format instead of reusing existing validated formats introduces risk of design errors.
 
 ### Redundant metadata
+
+<!-- REV0: The metadata issue likely deserves discussion earlier in the document -->
 
 This RFC introduces the possibility for redundant metadata.
 For example, a collection can contain inlined metadata for multiscale images and the multiscale images can also be specified in standalone metadata.
@@ -1631,6 +1650,8 @@ and explain the pitfalls and why they were abandoned.
 -->
 
 ## Prior art and references
+
+<!-- REV0: It might be good to share 1-2 sentences on whether the intent here is for this proposal to completely cover all the features of each prior art below, whether those groups are on board, etc. -->
 
 ### Initial Github issue
 
