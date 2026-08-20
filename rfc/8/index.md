@@ -234,34 +234,6 @@ A reference MUST be an object with the following fields:
 
 For external references, the `path` field MUST be present.
 
-#### Extensibility
-
-* [Extension system](#extensibility): namespacing within Nodes' types and fields within their attributes to allow extension of the OME-Zarr by specific vendors or for specific use cases
-
-Adding collections to OME-Zarr provides an opportunity to define extension points.
-Extension points allow the specification to be extended in a controlled manner, enabling custom functionality while maintaining interoperability.
-
-##### Naming scheme
-
-Extension identifiers follow a prefixed vs unprefixed convention:
-
-- **Unprefixed identifiers** are reserved for the core specification and can only be added or modified through the RFC process.
-- **Prefixed identifiers** (separated by `:`) can be freely introduced by custom extensions without requiring an RFC. The prefix identifies the user or organization that introduces and maintains the extension. Prefixes SHOULD be registered in a central registry (a Github repository under the `ome` organization). Registration of a prefix claims maintainership for that prefix and provides a discoverable location for the specification of custom extensions.
-- The `ome:` prefix is reserved for official extensions that have not yet been incorporated into the core specification.
-
-This naming scheme applies uniformly to all extension points listed below.
-
-Implementations SHOULD ignore extension identifiers they do not recognize, allowing graceful degradation when encountering unknown extensions.
-
-##### Extension points
-
-The extension system defines several points at which OME-Zarr can be extended
-while maintaining a common framework. These include node types, attribute keys,
-path types, coordinate transformation types, and coordinate system axis
-types. Each extension point is described in more detail in the
-corresponding sections of this proposal, where its structure, semantics,
-and requirements are defined.
-
 ### Abstract structure
 
 The proposal introduces a common Node structure for different types of OME-Zarr
@@ -600,11 +572,17 @@ The `scene` field allows to clearly distinguish between the spatial information 
 and the spatial information pertaining to the collection of images (which is stored in the `attributes` of the collection).
 
 
+<!-- 
+
+This section header might should be reactivated under Damien's proposal
+
 ### Extensions
 
 The following sections describe how existing specialized metadata structures
 are represented as extensions within the new framework, including labels, label
 attributes, and high-content screening (HCS) metadata.
+
+-->
 
 #### Label maps and other derived images
 
@@ -945,9 +923,39 @@ While inlined plate collections are shown above for simplicity, an on-disk plate
 The `bioformats2raw.layout` metadata is replaced by this proposal.
 A series of images can now be represented as a collection of multiscale images.
 
-## User stories
+## Appendix
 
-### 1. Visualize multiple images at once
+### Extensibility
+
+* [Extension system](#extensibility): namespacing within Nodes' types and fields within their attributes to allow extension of the OME-Zarr by specific vendors or for specific use cases
+
+Adding collections to OME-Zarr provides an opportunity to define extension points.
+Extension points allow the specification to be extended in a controlled manner, enabling custom functionality while maintaining interoperability.
+
+#### Naming scheme
+
+Extension identifiers follow a prefixed vs unprefixed convention:
+
+- **Unprefixed identifiers** are reserved for the core specification and can only be added or modified through the RFC process.
+- **Prefixed identifiers** (separated by `:`) can be freely introduced by custom extensions without requiring an RFC. The prefix identifies the user or organization that introduces and maintains the extension. Prefixes SHOULD be registered in a central registry (a Github repository under the `ome` organization). Registration of a prefix claims maintainership for that prefix and provides a discoverable location for the specification of custom extensions.
+- The `ome:` prefix is reserved for official extensions that have not yet been incorporated into the core specification.
+
+This naming scheme applies uniformly to all extension points listed below.
+
+Implementations SHOULD ignore extension identifiers they do not recognize, allowing graceful degradation when encountering unknown extensions.
+
+#### Extension points
+
+The extension system defines several points at which OME-Zarr can be extended
+while maintaining a common framework. These include node types, attribute keys,
+path types, coordinate transformation types, and coordinate system axis
+types. Each extension point is described in more detail in the
+corresponding sections of this proposal, where its structure, semantics,
+and requirements are defined.
+
+### User stories
+
+#### 1. Visualize multiple images at once
 Several viewers are capable of visualizing multiple images, that can map to a common coordinate space, at once. Examples are Webknossos, Neuroglancer, MoBIE and OMERO.figure. All of these tools have developed their own JSON-based metadata to combine multiple images in a collection, see "[Prior art and references](#prior-art-and-references)". In addition to mere path references of the images, this metadata also contains information about coordinate transforms and rendering settings.
 
 As there is no standard-compliant way in OME-Zarr to describe multiple images in one entity, users need to copy multiple links to interoperably visualize multiple images.
@@ -955,7 +963,7 @@ As there is no standard-compliant way in OME-Zarr to describe multiple images in
 RFC-5 introduced the `scene` metadata, which partially solved this issue.
 However, with this proposal we aim to embed it in a more flexible collection mechanism.
 
-### 2. m:n segmentations
+#### 2. m:n segmentations
 While OME-Zarr has support for attaching labels to images, the support is not sufficient for many use cases.
 There are multiple label images that can be attached to a single image. This is a 1:n relationship. However, m:n relationships would be desired because labels might be related to multiple images. Examples for that are:
 - Multiple correlated images express the same feature that is being labeled.
@@ -963,7 +971,7 @@ There are multiple label images that can be attached to a single image. This is 
 
 Additionally, there are other types of derived images, such as prediction maps, which cannot currently be represented by OME-Zarr. In comparison to label maps, where each voxel is assigned a discrete ID, prediction maps have a channel per segmentation class (or similar) and each voxel is assigned a probability or other continuous value.
 
-### 3. Shallow copies of images with segmentations
+#### 3. Shallow copies of images with segmentations
 Many workflow engines operate by taking input images and producing output images. In many cases, it is desired to keep the input images unchanged.
 Let's assume the example of a pixel classification task. This task would take an OME-Zarr image as input and produce a prediction map. To express the relationship between input image and output prediction, the task could create a collection that contains the prediction and links to the image (i.e. shallow copy). The output collection could then be used to visualize both at the same time. This is applicable to a wide variety of workflow tasks with the result that the outputs of each task can be visualized or further processed independent of other tasks.
 
@@ -986,7 +994,7 @@ Examples for such workflow systems:
 - [Fractal](https://fractal-analytics-platform.github.io/)
 - [Nextflow](https://www.nextflow.io/)
 
-### 4. Correlative imaging
+#### 4. Correlative imaging
 
 Several applications in microscopy and other imaging domains involve the acquisition of images
 of the same object from different angles or with different imaging modalities.
@@ -1012,7 +1020,7 @@ with coordinate systems and transformations as attributes of the collection and 
 In a way, coordinate transformations and systems simply become a subset of the more general collection concept.
 
 
-### 5. High Content Screening (HCS) plates
+#### 5. High Content Screening (HCS) plates
 
 OME-Zarr high content screening plates are a current example of a narrowly defined type of collection.
 They allow grouping OME-Zarr images in multiple hierarchy levels: A plate contains wells, which are organized as row folders with column subfolders in each.
@@ -1031,14 +1039,14 @@ A flexible metadata field like `attributes` would allow us to better define such
 A more flexible HCS collection system could also allow to provide advanced metadata on well positions [when wells have different sizes](https://github.com/ome/ome-zarr-py/issues/240) or address other edge-cases in the current HCS configuration.
 
 
-### 6. Image Archive
+#### 6. Image Archive
 Data archives that support deposition and access to OME-Zarr formatted images have two primary use cases for collections of images.
 For the first, users submitting data to deposition databases need ways to aggregate collections of images in their data upload structure, and do so in a way that supports describing how those images relate (e.g. parts of the same acquisition series, plate/well data as mentioned above).
 This can then be parsed during data submission, and used to create appropriate database records.
 
 Secondly, when providing outgoing access to data, archives want to provide groupings of images that allow compatibility with data exploration and visualisation tools. Given the increasingly rich ecosystem of these tools (mentioned across these use cases, and including grid views, segmentations, multiple images and plate/well data) standardisation is necessary to avoid the need to produce view/exploration schema for each tool.
 
-### 7. Rendering settings
+#### 7. Rendering settings
 Viewers, such as Webknossos, Neuroglancer, MoBIE and OMERO.figure, are capable of visualizing multiple OME-Zarr images ("layers") in a view.
 To share such a view, metadata serialization is required that contains not only links to the images, but also attached metadata of the rendering state.
 The rendering state of a collection might contain locations, rotation angles, coordinate systems as well as rendering state of individual layers.
@@ -1048,13 +1056,13 @@ Some of these rendering state attributes might be compatible across implementati
 This proposal does not intend to provide a specification for the rendering state itself, but provide metadata containers to store such viewer-specific state.
 
 
-### 8. Grouping together remote images
+#### 8. Grouping together remote images
 
 When building upon images that have been published by others, it might be useful to create virtual groupings of multiple remotely stored images.
 For example, a lab might create automatic segmentations of a large image that has been published by another lab.
 While the segmentation would now be published on its own, it could still be published with a link to the original images so that viewers are able to show the segmentation as an overlay on the original data.
 
-### 9. Adding other datatypes to images
+#### 9. Adding other datatypes to images
 When processing images in the OME-Zarr format, a diversity of derived data like segmentation, probability maps, meshes, tables and other formats can be generated.
 This proposal does not intend to provide a specification to all these datatypes, but to define the metadata of how related data in Zarr or other formats can be linked to OME-Zarr images.
 
@@ -1063,7 +1071,7 @@ For other datatypes like tables, [past proposals](https://github.com/ome/ngff/pu
 As these proposals did not proceed to become part of the OME-Zarr spec, different implementers have built their own sub-specs for tables (see e.g. the [ngio table definition](https://fractal-analytics-platform.github.io/ngio/v0.3.2/table_specs/overview/) coming from the Fractal project or the [label table](https://mobie.github.io/specs/mobie_spec.html#table-data) in MoBIE).
 While future proposals and extensions may define datatypes like tables more strictly, this proposal offers a general way to make such additional data types discoverable.
 
-### 10. Gallery / grid views
+#### 10. Gallery / grid views
 
 It is useful to visualise similar images in a grid view where all images are visible as "thumbnails", which in the case of OME-Zarr can simply be the lowest resolution version of the data. Like this, users can have an overview of all the data and can then decide to "zoom in" on some datasets to explore them in higher resolution.
 
@@ -1077,7 +1085,7 @@ For example, [this table](https://docs.google.com/spreadsheets/d/1t5xB0p0zd2-a6y
 
 ![MoBIE grid view](./assets/mobie_grid_view.jpg)
 
-#### Example: A grid view gallery
+##### Example: A grid view gallery
 
 A gallery view could also be represented within the proposed collection JSON as shown in the below example.
 
@@ -1178,13 +1186,13 @@ Also note some MoBIE specific attributes:
 ```
 
 
-## Other Examples
+### Other Examples
 
 The examples below demonstrate combinations of various features in this
 proposal. Further example can be found under
 https://github.com/normanrz/ngff-rfc8-collection-examples/.
 
-### A multiscale group with a single, inlined resolution level
+#### A multiscale group with a single, inlined resolution level
 ```jsonc
 {
     "ome": {
@@ -1225,7 +1233,7 @@ https://github.com/normanrz/ngff-rfc8-collection-examples/.
 }
 ```
 
-### A multiscale group with a single resolution level
+#### A multiscale group with a single resolution level
 
 The multiscale group contains the following metadata:
 ```jsonc
@@ -1287,7 +1295,7 @@ And the `zarr.json` at the location of the resolution level (`./s0/zarr.json`) c
 }
 ```
 
-### A collection with a multiscale and a nested collection
+#### A collection with a multiscale and a nested collection
 ```jsonc
 {
     "ome": {
@@ -1326,7 +1334,7 @@ And the `zarr.json` at the location of the resolution level (`./s0/zarr.json`) c
 ```
 
 
-### A collection with an inlined multiscale
+#### A collection with an inlined multiscale
 ```jsonc
 {
     "ome": {
